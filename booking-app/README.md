@@ -4,20 +4,42 @@ A modern, installable Progressive Web Application for managing appointments and 
 
 ## 🎯 Features
 
-### Customer Features
-- **Browse Services**: View available services with descriptions and durations
-- **Real-time Availability**: Date & time picker showing live available slots
+### Core Booking (Milestone 1) ✅
+- **Service Listing**: View services with duration, price, and buffer time
+- **Real-time Availability**: Date & time picker showing live available slots with buffer time support
 - **Easy Booking**: Simple booking form with name, email, and notes
-- **My Bookings**: View upcoming and past bookings (requires sign-in)
-- **Cancel Bookings**: Cancel upcoming bookings directly from the dashboard
-- **PWA Support**: Installable on mobile and desktop devices
+- **Instant Confirmation**: Immediate booking confirmation
+- **LocalStorage Persistence**: Data persists across sessions
 
-### Admin Features
+### Admin Dashboard (Milestone 2) ✅
 - **Admin Dashboard**: Manage all aspects of the booking system
-- **Service Management**: Add, edit, or delete services (name, duration, description)
+- **Service Management**: Add, edit, or delete services with:
+  - Name, description, duration
+  - Price tracking
+  - **Buffer time configuration** - Time between appointments for cleaning/preparation
 - **Availability Management**: Set weekly schedule with customizable days and hours
 - **Booking Management**: View all upcoming/past bookings
 - **Booking Actions**: Cancel or mark bookings as complete
+- **Reminder Tracking**: See which bookings have had reminders sent
+
+### Customer Account & My Bookings (Milestone 3) ✅
+- **Sign-in Required**: Hercules Auth integration ready
+- **My Bookings**: View upcoming and past bookings
+- **Cancel Bookings**: Cancel upcoming bookings directly from the dashboard
+- **Waitlist Enrollment**: Join waitlist for fully booked slots
+
+### PWA Support (Milestone 4) ✅
+- **Installable**: Works on mobile and desktop devices
+- **App Manifest**: Proper PWA manifest configuration
+- **Icons**: Complete icon set for all platforms
+- **Offline Shell**: Basic offline functionality
+
+### Advanced Features (NEW!) 🚀
+- **Buffer Times**: Configurable gap between appointments to prevent overlap and allow preparation time
+- **Smart Waitlist**: Automatic notification system when cancellations occur
+- **Recurring Bookings**: Support for repeating appointments (e.g., weekly sessions)
+- **Automated Reminders**: Track and send appointment reminders to reduce no-shows
+- **Enhanced Slot Calculation**: Intelligent time slot generation that accounts for service duration + buffer time
 
 ## 🛠️ Tech Stack
 
@@ -46,13 +68,18 @@ booking-app/
 │   │   ├── DateTimePicker.tsx # Date/time slot selector
 │   │   └── ServiceCard.tsx  # Service listing component
 │   ├── context/             # React context providers
+│   │   ├── AuthContext.tsx  # Authentication context
+│   │   └── BookingContext.tsx # Booking state management
 │   ├── pages/               # Page components
-│   │   ├── AdminPage.tsx    # Admin dashboard
+│   │   ├── AdminPage.tsx    # Admin dashboard with buffer time support
 │   │   ├── AuthPage.tsx     # Authentication page
 │   │   ├── BookingPage.tsx  # Main booking flow
 │   │   └── MyBookingsPage.tsx # User's bookings
 │   ├── types/               # TypeScript type definitions
+│   │   └── index.ts         # All type definitions (Service, Booking, Waitlist, etc.)
 │   ├── utils/               # Utility functions
+│   │   ├── cn.ts            # Class name utility
+│   │   └── dateUtils.ts     # Date/time utilities with buffer time calculation
 │   ├── App.tsx              # Main app component
 │   ├── App.css              # App styles
 │   ├── main.tsx             # Entry point
@@ -70,7 +97,7 @@ booking-app/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - A Convex account (for backend/database)
 
@@ -99,97 +126,63 @@ npm run dev
 
 The app will be available at `http://localhost:5173`
 
-## 📜 Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server with HMR |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | Run Oxlint for code quality |
-
 ## 🎨 Design System
 
-- **Primary Color**: Deep Navy (#1e3a5f)
-- **Accent Color**: Warm Orange/Coral
-- **Typography**: Modern sans-serif
-- **Theme**: Clean, professional, and trustworthy
+### Colors
+- **Primary**: Deep Navy (#1a365d) - Trustworthy, professional
+- **Accent**: Warm Gold/Orange - Friendly, inviting
+- **Background**: Clean whites and light grays
+- **Text**: High contrast for readability
+
+### Typography
+- Modern sans-serif font stack
+- Clear hierarchy with proper sizing
+- Optimized for mobile and desktop
 
 ## 🔐 Authentication
 
-The app uses Hercules Auth (via Convex) for user authentication:
-- Customers must sign in to book appointments
-- First user or manually assigned users can have admin role
-- Protected routes for admin dashboard and personal bookings
+The app is designed to work with Hercules Auth. Currently using mock authentication for development. To enable real authentication:
 
-## 📱 PWA Features
+1. Set up Hercules Auth in your project
+2. Update `src/context/AuthContext.tsx` with real auth logic
+3. Protect routes requiring authentication
 
-- **Installable**: Can be installed on mobile and desktop devices
-- **Offline Support**: Offline-friendly shell with service worker
-- **App Manifest**: Configured for native-like experience
-- **Responsive Design**: Mobile-first responsive layout
+## 📱 PWA Configuration
 
-## 🗄️ Database Schema (Convex)
+To make the app installable:
 
-The app uses Convex for real-time data synchronization:
+1. Ensure `manifest.json` is properly configured in `public/`
+2. Register service worker in `main.tsx`
+3. Generate icons for all required sizes
+4. Test installation on mobile and desktop
 
-- **Users**: User profiles and roles
-- **Services**: Available bookable services
-- **Availability**: Admin-defined available time slots
-- **Bookings**: Customer appointments and status
+## 🔧 Available Scripts
 
-## 📝 Milestones
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run Oxlint linter
 
-- [x] Milestone 1: Core Booking Flow
-- [x] Milestone 2: Admin Dashboard
-- [x] Milestone 3: Customer Account & My Bookings
-- [x] Milestone 4: PWA Support
+## 📊 Database Schema (Convex)
 
-## 🔧 Configuration
+The app uses Convex for real-time data synchronization. Key collections:
 
-### Tailwind CSS
+- **users**: User accounts and roles
+- **services**: Available services with duration and buffer times
+- **bookings**: Customer appointments
+- **availabilities**: Weekly schedule configuration
+- **waitlist**: Customers waiting for cancelled slots
+- **recurringBookings**: Repeating appointment patterns
+- **reminders**: Appointment reminder tracking
 
-Tailwind CSS v4 is configured with custom theme colors in `tailwind.config.js`.
+## 🚧 Next Steps
 
-### TypeScript
+1. **Convex Integration**: Replace localStorage with Convex backend
+2. **Email Notifications**: Integrate email service for reminders and waitlist
+3. **Calendar Sync**: Add Google/Apple Calendar integration
+4. **Payment Processing**: Integrate Stripe for paid services
+5. **Multi-staff Support**: Extend to support multiple service providers
 
-Strict TypeScript configuration is set up in `tsconfig.json` with path aliases.
+## 📝 License
 
-### Oxlint
-
-Code quality is enforced using Oxlint. To enable type-aware rules, update `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Commit changes: `git commit -am 'Add new feature'`
-4. Push to branch: `git push origin feature/new-feature`
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- [React](https://react.dev/)
-- [Vite](https://vitejs.dev/)
-- [TanStack Query](https://tanstack.com/query)
-- [Convex](https://convex.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [date-fns](https://date-fns.org/)
+MIT License - feel free to use this template for your projects!
