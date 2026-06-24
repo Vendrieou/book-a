@@ -1,0 +1,56 @@
+```
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+.mypy_cache/
+.pytest_cache/
+coverage/
+
+# Package manager
+package-lock.json
+yarn.lock
+
+# Compiled JavaScript (if any)
+*.js.map
+*.jsx.map
+*.ts.map
+*.tsx.map
+
+# Vite specific
+!.vite/
+vite/dist/
+
+# Temporary files
+*.tmp
+*.temp
+```
