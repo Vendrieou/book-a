@@ -8,12 +8,12 @@ export function AdminPage() {
   const { services, availabilities, bookings, addService, updateService, deleteService, updateAvailability } = useBooking();
   const [activeTab, setActiveTab] = useState<'services' | 'availability' | 'bookings'>('services');
   const [editingService, setEditingService] = useState<Service | null>(null);
-  const [newService, setNewService] = useState({ name: '', description: '', duration: 30, price: 0 });
+  const [newService, setNewService] = useState({ name: '', description: '', duration: 30, price: 0, bufferTime: 10 });
 
   const handleAddService = async () => {
     if (newService.name && newService.description) {
       await addService(newService);
-      setNewService({ name: '', description: '', duration: 30, price: 0 });
+      setNewService({ name: '', description: '', duration: 30, price: 0, bufferTime: 10 });
     }
   };
 
@@ -65,7 +65,7 @@ export function AdminPage() {
             {/* Add New Service */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-primary-900 mb-4">Add New Service</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <input
                   type="text"
                   placeholder="Service Name"
@@ -79,6 +79,14 @@ export function AdminPage() {
                   value={newService.duration}
                   onChange={(e) => setNewService({ ...newService, duration: parseInt(e.target.value) || 0 })}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+                />
+                <input
+                  type="number"
+                  placeholder="Buffer Time (minutes)"
+                  value={newService.bufferTime}
+                  onChange={(e) => setNewService({ ...newService, bufferTime: parseInt(e.target.value) || 0 })}
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+                  title="Time between appointments for cleaning/preparation"
                 />
                 <input
                   type="number"
@@ -116,12 +124,19 @@ export function AdminPage() {
                         onChange={(e) => setEditingService({ ...editingService, name: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
                       />
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-3 gap-4">
                         <input
                           type="number"
                           value={editingService.duration}
                           onChange={(e) => setEditingService({ ...editingService, duration: parseInt(e.target.value) || 0 })}
                           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+                        />
+                        <input
+                          type="number"
+                          value={editingService.bufferTime || 0}
+                          onChange={(e) => setEditingService({ ...editingService, bufferTime: parseInt(e.target.value) || 0 })}
+                          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+                          title="Buffer time between appointments"
                         />
                         <input
                           type="number"
@@ -157,7 +172,7 @@ export function AdminPage() {
                         <h3 className="font-semibold text-primary-900">{service.name}</h3>
                         <p className="text-gray-600 text-sm mt-1">{service.description}</p>
                         <p className="text-gray-500 text-sm mt-2">
-                          {service.duration} min • ${service.price}
+                          {service.duration} min • {service.bufferTime ? `${service.bufferTime} min buffer` : 'No buffer'} • ${service.price}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -239,6 +254,9 @@ export function AdminPage() {
                       <p className="text-sm text-gray-600">{booking.customerName} ({booking.customerEmail})</p>
                       {booking.notes && (
                         <p className="text-sm text-gray-500 mt-2 italic">"{booking.notes}"</p>
+                      )}
+                      {booking.reminderSent && (
+                        <p className="text-xs text-green-600 mt-1">✓ Reminder sent</p>
                       )}
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
